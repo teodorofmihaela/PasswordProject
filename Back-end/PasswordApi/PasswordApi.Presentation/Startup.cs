@@ -1,6 +1,9 @@
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
+using PasswordApi.Core.Interfaces;
+using PasswordApi.Core.Services;
 using PasswordApi.Infrastructure.Data;
+using PasswordApi.Infrastructure.Repositories;
 using ServerVersion = Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace PasswordApi.Presentation;
@@ -39,6 +42,12 @@ public class Startup
     
     private void ResolveDependencies(IServiceCollection services)
     {
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<ITemporaryPasswordRepository, TemporaryPasswordRepository>();
+        services.AddScoped<ILoginService, LoginService>();
+        services.AddScoped<ITemporaryPasswordService, TemporaryPasswordService>();
+        
+        
         var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
 
         services.AddDbContext<DataContext>(

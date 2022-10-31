@@ -9,9 +9,17 @@ public class AccountRepository : IAccountRepository
 {
     private readonly DataContext _dataContext;
 
+    public AccountRepository(DataContext dataContext)
+    {
+        _dataContext = dataContext;
+    }
+
     public async Task<List<Account>> GetAllAccounts()
     {
-        return await _dataContext.Accounts.AsQueryable().ToListAsync();
+        return await _dataContext.Accounts
+            .AsQueryable()
+            .Include(account => account.TemporaryPassword)
+            .ToListAsync();
     }
 
     public async Task<bool> CreateAccount(Account inputAccount)

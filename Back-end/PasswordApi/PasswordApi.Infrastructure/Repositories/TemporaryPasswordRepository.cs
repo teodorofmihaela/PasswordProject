@@ -9,9 +9,13 @@ public class TemporaryPasswordRepository : ITemporaryPasswordRepository
 {
     private readonly DataContext _dataContext;
 
+    public TemporaryPasswordRepository(DataContext dataContext)
+    {
+        _dataContext = dataContext;
+    }
+
     public async Task<List<TemporaryPassword>> GetAllTemporaryPasswords()
     {
-        
         return await _dataContext.TemporaryPasswords.AsQueryable().ToListAsync();
     }
 

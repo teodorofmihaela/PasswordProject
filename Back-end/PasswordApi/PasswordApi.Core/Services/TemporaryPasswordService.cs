@@ -9,7 +9,8 @@ public class TemporaryPasswordService : ITemporaryPasswordService
     private readonly ITemporaryPasswordRepository _temporaryPasswordRepository;
     private static Random random = new Random();
 
-    public TemporaryPasswordService(IAccountRepository accountRepository,ITemporaryPasswordRepository temporaryPasswordRepository)
+    public TemporaryPasswordService(IAccountRepository accountRepository,
+        ITemporaryPasswordRepository temporaryPasswordRepository)
     {
         _accountRepository = accountRepository;
         _temporaryPasswordRepository = temporaryPasswordRepository;
@@ -18,41 +19,51 @@ public class TemporaryPasswordService : ITemporaryPasswordService
     public async Task<TemporaryPassword> GenerateTemporaryPassword(Guid userId)
     {
         List<Account> accountList = await _accountRepository.GetAllAccounts();
-        Account user = accountList.FirstOrDefault(account => account.UserId == userId,new Account());
-        if (user.UserId != Guid.Empty)
+        Account user = accountList.FirstOrDefault(account => account.UserId == userId, new Account());
+
+        if (!user.EmptyId())
         {
             TemporaryPassword temporaryPassword = user.TemporaryPassword;
-            if (temporaryPassword.Id != Guid.Empty)
-            {
-                if (temporaryPassword.ExpirationTime > DateTime.Now)
-                {
-                    temporaryPassword.Password = GeneratePassword();
-                    temporaryPassword.ExpirationTime = DateTime.Now.AddMilliseconds(30000);
-                    temporaryPassword.Id = new Guid();
-                    _temporaryPasswordRepository.CreateTemporaryPassword(temporaryPassword);
-                    user.TemporaryPasswordId = temporaryPassword.Id;
 
-                }
-                else
-                {
-                    throw new Exception("The password didn't expire yet!");
-                }
-            }
-            else
-            {
-                TemporaryPassword newPassword = new TemporaryPassword();
-                newPassword.Password = GeneratePassword();
-                newPassword.ExpirationTime = DateTime.Now.AddMilliseconds(30000);
-                newPassword.Id = new Guid();
-                _temporaryPasswordRepository.CreateTemporaryPassword(newPassword);
-                user.TemporaryPasswordId = newPassword.Id;
-            }
+            if (temporaryPassword.HasExpired())
+                return await UpdateUserExistingPassword(user);
+            throw new Exception("The password didn't expire yet!");
         }
-        else
+
+        var password = await CreateNewUserPassword();
+        user = new Account
         {
-            throw new Exception("User doesn't exists");
-        }
-        return new TemporaryPassword();
+            UserId = userId,
+            TemporaryPassword = password,
+            TemporaryPasswordId = password.Id
+        };
+        await _accountRepository.CreateAccount(user);
+        return password;
+    }
+
+    private async Task<TemporaryPassword> UpdateUserExistingPassword(Account user)
+    {
+        TemporaryPassword temporaryPassword = new TemporaryPassword
+        {
+            Password = GeneratePassword(),
+            ExpirationTime = DateTime.Now.AddMilliseconds(30000),
+            Id = user.TemporaryPasswordId
+        };
+
+        await _temporaryPasswordRepository.UpdateTemporaryPassword(temporaryPassword);
+
+        return temporaryPassword;
+    }
+
+    private async Task<TemporaryPassword> CreateNewUserPassword()
+    {
+        TemporaryPassword newPassword = new TemporaryPassword();
+        newPassword.Password = GeneratePassword();
+        newPassword.ExpirationTime = DateTime.Now.AddMilliseconds(30000);
+        newPassword.Id = new Guid();
+        await _temporaryPasswordRepository.CreateTemporaryPassword(newPassword);
+
+        return newPassword;
     }
 
     private string GeneratePassword()

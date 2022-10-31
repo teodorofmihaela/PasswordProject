@@ -9,4 +9,9 @@ public class Account
     
     public TemporaryPassword TemporaryPassword { get; set; }
     public Guid TemporaryPasswordId { get; set; }
+
+    public bool EmptyId()
+    {
+        return UserId == Guid.Empty;
+    }
 }

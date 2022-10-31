@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PasswordApi.Core.Interfaces;
 using PasswordApi.Core.Services;
 using PasswordApi.Infrastructure.Data;
@@ -19,7 +20,11 @@ public class Startup
     
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers().ConfigureApiBehaviorOptions(options => { });
+        services.AddControllers().ConfigureApiBehaviorOptions(options => { }).AddNewtonsoftJson(t =>
+        {
+            t.SerializerSettings.MaxDepth = 126;
+            t.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
 
         ResolveDependencies(services);
     }

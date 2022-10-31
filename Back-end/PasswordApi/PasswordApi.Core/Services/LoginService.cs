@@ -22,25 +22,15 @@ public class LoginService: ILoginService
         {
             if (user.TemporaryPassword.Password.Equals(password))
             {
-                if (user.TemporaryPassword.ExpirationTime<=DateTime.Now)
+                if (user.TemporaryPassword.ExpirationTime > DateTime.Now)
                 {
                     Console.WriteLine("Login successfully!");
                     return true;
                 }
-                else
-                {
-                    throw new Exception("Password expierd!");
-                }
+                throw new Exception("Password expired!");
             }
-            else
-            {
-                throw new Exception("Password is incorrect!");
-            }
+            throw new Exception("Password is incorrect!");
         }
-        else
-        {
-            throw new Exception("User not found");
-        }
-        return true;
+        throw new Exception("User not found");
     }
 }

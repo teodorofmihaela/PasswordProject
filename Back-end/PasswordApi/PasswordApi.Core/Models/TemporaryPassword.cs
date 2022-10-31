@@ -10,4 +10,14 @@ public class TemporaryPassword
     public DateTime ExpirationTime { get; set; }
     
     public Account Account { get; set; }
+    
+    public bool EmptyId()
+    {
+        return Id == Guid.Empty;
+    }
+
+    public bool HasExpired()
+    {
+        return ExpirationTime < DateTime.Now;
+    }
 }

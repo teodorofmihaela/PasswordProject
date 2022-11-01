@@ -31,6 +31,11 @@ public class Startup
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
     {
+        app.UseCors(x =>
+            x.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+        
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

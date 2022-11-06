@@ -1,4 +1,8 @@
-.App {
+* {
+  font-family: 'Heebo', sans-serif!important;
+}
+  
+  .App {
   text-align: center;
   /* background-color: #DDF; */
   height: 100%;

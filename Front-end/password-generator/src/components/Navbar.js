@@ -18,7 +18,7 @@ function Navbar() {
                     <Card className='card'>
                         <LockIcon className="icon" />
                     </Card>
-                    <div className="pageTitle" style={{"marginLeft": "20px"}} align="left">
+                    <div className="pageTitle" style={{ "marginLeft": "20px" }} align="left">
                         <Typography variant="h6">Password Generator</Typography>
                         <div className="subtitle">
                             <Typography>My website for generationg passwords</Typography>

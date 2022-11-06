@@ -17,6 +17,8 @@ import Alert from '@mui/material/Alert';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import LoginIcon from '@mui/icons-material/Login';
 import PixIcon from '@mui/icons-material/Pix';
+import CopyrightIcon from '@mui/icons-material/Copyright';
+import { spacing } from '@mui/system';
 import "./Form.css";
 
 function Form() {
@@ -26,7 +28,7 @@ function Form() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    
+
     const [passwordInput, setPasswordInput] = useState();
     const [userIdInput, setUserIdInput] = useState();
 
@@ -188,10 +190,10 @@ function Form() {
                             </Card>
                         </Item>
                     </Item>
-                </Stack>
+                </Stack>      
             </Grid>
         </FormGroup>
-    );
+            );
 }
 
 export default Form;

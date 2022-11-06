@@ -1,7 +1,12 @@
 .App {
   text-align: center;
-  background-color: #DDF;
+  /* background-color: #DDF; */
   height: 100%;
+}
+
+.Footer{
+  position: absolute; 
+    padding-top: 40%; 
 }
 
 

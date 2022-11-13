@@ -1,8 +1,8 @@
+using System.Runtime.CompilerServices;
 using PasswordApi.Core.Interfaces;
 using PasswordApi.Core.Models;
 
-namespace PasswordApi.Core.Services;
-
+ namespace PasswordApi.Core.Services;
 public class TemporaryPasswordService : ITemporaryPasswordService
 {
     private readonly IAccountRepository _accountRepository;
@@ -41,7 +41,7 @@ public class TemporaryPasswordService : ITemporaryPasswordService
         return password;
     }
 
-    private async Task<TemporaryPassword> UpdateUserExistingPassword(Account user)
+    public async Task<TemporaryPassword> UpdateUserExistingPassword(Account user)
     {
         TemporaryPassword temporaryPassword = new TemporaryPassword
         {
@@ -55,7 +55,7 @@ public class TemporaryPasswordService : ITemporaryPasswordService
         return temporaryPassword;
     }
 
-    private async Task<TemporaryPassword> CreateNewUserPassword()
+    public async Task<TemporaryPassword> CreateNewUserPassword()
     {
         TemporaryPassword newPassword = new TemporaryPassword();
         newPassword.Password = GeneratePassword();
@@ -66,7 +66,7 @@ public class TemporaryPasswordService : ITemporaryPasswordService
         return newPassword;
     }
 
-    private string GeneratePassword()
+    public string GeneratePassword()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
         return new string(Enumerable.Repeat(chars, 10)

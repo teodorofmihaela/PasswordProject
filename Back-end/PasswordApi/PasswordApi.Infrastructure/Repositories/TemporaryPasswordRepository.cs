@@ -16,7 +16,9 @@ public class TemporaryPasswordRepository : ITemporaryPasswordRepository
 
     public async Task<List<TemporaryPassword>> GetAllTemporaryPasswords()
     {
-        return await _dataContext.TemporaryPasswords.AsQueryable().ToListAsync();
+        return await _dataContext.TemporaryPasswords.AsQueryable()
+            .Include(password => password.Account)
+            .ToListAsync();
     }
 
     public async Task<bool> CreateTemporaryPassword(TemporaryPassword inputTemporaryPassword)
